@@ -2,71 +2,20 @@
 #include"View.h"
 void body();
 void make_chooce(int ans, string st, string end, vector<int>vt[], int mp_maney[][1000], int mp_time[][1000]);
-void choose(string st,string end, vector<int>vt[], int mp_maney[][1000], int mp_time[][1000])
+void choose(string st, string end, vector<int>vt[], int mp_maney[][1000], int mp_time[][1000])
 {
 	int ans = 0;
-	cout << "Ä¿Ç°ÓÐÁ½ÖÖ·½°¸Ñ¡Ôñ£º1 Ê±¼ä×î¶Ì   2 ·ÑÓÃ×îµÍ   \n ";
+	cout << "ç›®å‰æœ‰ä¸¤ç§æ–¹æ¡ˆé€‰æ‹©ï¼š1 æ—¶é—´æœ€çŸ­   2 è´¹ç”¨æœ€ä½Ž   \n ";
 	cout << endl;
-	cout << "ÇëÊäÈëÄãÑ¡Ôñ·½°¸µÄÐòºÅ£º";
+	cout << "è¯·è¾“å…¥ä½ é€‰æ‹©æ–¹æ¡ˆçš„åºå·ï¼š";
 	cin >> ans;
 	system("cls");
 	make_chooce(ans, st, end, vt, mp_maney, mp_time);
 }
 void time_road(string st, string en, vector<int>vt[], int mp_time[][1000])
 {
-	vector<int>aaa;
-	int vis[1000] = { 0 };
-	int ans = 0;
-	for (int i : st)
-	{
-		ans += (int)i;
-	}
-	int start = q_sh.get(ans+M);
-	ans = 0;
-	for (int i : en)
-	{
-		ans += (int)i;
-	}
-	int end = q_sh.get(ans + M);
-	ans = 0;
-	int ans1 = 0;
-	q_queue<pair<int, int>>q; 
-	q.push(make_pair(0, start));
-	while (q.size() != 0)
-	{
-		pair<int, int>now = q.top();
-		ans += now.first;
-		aaa.push_back(now.second);
-		if (now.second == end)
-		{
-			cout << "ÒÑÎªÄúÑ¡Ôñ×î¼ÑÂ·Ïß£º\n";
-			cout << "ÄúµÄÆðµãÎª£º" << st << endl;
-			for (int i =1;i<aaa.size()-1;i++)
-			{
-				cout << "½«»á¾­¹ý£º";
-				cout << stars[aaa[i]].name << endl;
-				//cout << stars[aaa[i]].discription << endl;
-			}
-			cout << "×îºóµ½´ïÖÕµã£º" << en << endl;
-			cout <<"Â·³ÌºÄÊ±Îª£º" << ans <<"Ð¡Ê±"<< endl;
-			cout << '\n' << "×£ÄúÒ»Â·Ë³·ç" << endl;
-			system("pause");
-			return;
-		}
-		vis[now.second]++;
-		q.pop();
-		for (int i=0;i<vt[now.second].size();i++)
-		{
-			if (vis[vt[now.second][i]])continue;
-			q.push(make_pair(mp_time[now.second][vt[now.second][i]], vt[now.second][i]));
-		}
-	}
-	cout << "¶Ô²»Æð£¬Ã»ÓÐÕÒµÄ¶ÔÓ¦Â·¾¶ÄÜµ½´ïÄ¿±êµØµã" << endl;
-	body();
-}
-void money_road(string st, string en, vector<int>vt[], int mp_maney[][1000])
-{
-	vector<int>aaa;
+	int dis[10000];
+	memset(dis, 0x3f3f3f3f, sizeof(dis));
 	int vis[1000] = { 0 };
 	int ans = 0;
 	for (int i : st)
@@ -80,44 +29,94 @@ void money_road(string st, string en, vector<int>vt[], int mp_maney[][1000])
 		ans += (int)i;
 	}
 	int end = q_sh.get(ans + M);
-	ans = 0;
-	int ans1 = 0;
 	q_queue<pair<int, int>>q;
 	q.push(make_pair(0, start));
 	while (q.size() != 0)
 	{
 		pair<int, int>now = q.top();
-		ans += now.first;
-		aaa.push_back(now.second);
-		if (now.second == end)
-		{
-			cout << "ÒÑÎªÄúÑ¡Ôñ×î¼ÑÂ·Ïß£º\n";
-			cout << "ÄúµÄÆðµãÎª£º" << st << endl;
-			for (int i = 1; i < aaa.size() - 1; i++)
-			{
-				cout << "½«»á¾­¹ý£º";
-				cout << stars[aaa[i]].name << endl;
-				//cout << stars[aaa[i]].discription << endl;
-			}
-			cout << "×îºóµ½´ïÖÕµã£º" << en << endl;
-			cout << "Â·³ÌÎª£º" << ans <<"¹«Àï" << endl;
-			cout << '\n' << "×£ÄúÒ»Â·Ë³·ç" << endl;
-			system("pause");
-			
-			return;
-		}
 		vis[now.second]++;
 		q.pop();
 		for (int i = 0; i < vt[now.second].size(); i++)
 		{
 			if (vis[vt[now.second][i]])continue;
-			q.push(make_pair(mp_maney[now.second][vt[now.second][i]], vt[now.second][i]));
+			if (dis[vt[now.second][i]] > mp_time[now.second][vt[now.second][i]] + now.first)
+			{
+				dis[vt[now.second][i]] = mp_time[now.second][vt[now.second][i]] + now.first;
+				q.push(make_pair(dis[vt[now.second][i]], vt[now.second][i]));
+			}
 		}
 	}
-	cout << "¶Ô²»Æð£¬Ã»ÓÐÕÒµÄ¶ÔÓ¦Â·¾¶ÄÜµ½´ïÄ¿±êµØµã" << endl;
-	body();
+	if (dis[end] == 0x3f3f3f3f)
+	{
+		cout << "å¯¹ä¸èµ·ï¼Œæ²¡æœ‰æ‰¾çš„å¯¹åº”è·¯å¾„èƒ½åˆ°è¾¾ç›®æ ‡åœ°ç‚¹" << endl;
+		body();
+	}
+	else
+	{
+		cout << "å·²ä¸ºæ‚¨é€‰æ‹©æœ€ä½³è·¯çº¿ï¼š\n\n";
+		cout << "          æ‚¨çš„èµ·ç‚¹ä¸ºï¼š" << st << endl;
+
+		cout << "          æœ€åŽåˆ°è¾¾ç»ˆç‚¹ï¼š" << en << endl;
+		cout << "          æ—¶é—´ä¸ºï¼š" << dis[end] << "å°æ—¶" << endl;
+		cout << '\n' << "ç¥æ‚¨ä¸€è·¯é¡ºé£Ž" << endl;
+		system("pause");
+
+		return;
+	}
 }
-void make_chooce(int ans, string st, string end,vector<int>vt[],int mp_maney[][1000], int mp_time[][1000])
+void money_road(string st, string en, vector<int>vt[], int mp_maney[][1000])
+{
+	int dis[10000];
+	memset(dis, 0x3f3f3f3f, sizeof(dis));
+	int vis[1000] = { 0 };
+	int ans = 0;
+	for (int i : st)
+	{
+		ans += (int)i;
+	}
+	int start = q_sh.get(ans + M);
+	ans = 0;
+	for (int i : en)
+	{
+		ans += (int)i;
+	}
+	int end = q_sh.get(ans + M);
+	q_queue<pair<int, int>>q;
+	q.push(make_pair(0, start));
+	while (q.size() != 0)
+	{
+		pair<int, int>now = q.top();
+		vis[now.second]++;
+		q.pop();
+		for (int i = 0; i < vt[now.second].size(); i++)
+		{
+			if (vis[vt[now.second][i]])continue;
+			if (dis[vt[now.second][i]] > mp_maney[now.second][vt[now.second][i]] + now.first)
+			{
+				dis[vt[now.second][i]] = mp_maney[now.second][vt[now.second][i]] + now.first;
+				q.push(make_pair(dis[vt[now.second][i]], vt[now.second][i]));
+			}
+		}
+	}
+	if (dis[end] == 0x3f3f3f3f)
+	{
+		cout << "å¯¹ä¸èµ·ï¼Œæ²¡æœ‰æ‰¾çš„å¯¹åº”è·¯å¾„èƒ½åˆ°è¾¾ç›®æ ‡åœ°ç‚¹" << endl;
+		body();
+	}
+	else
+	{
+		cout << "å·²ä¸ºæ‚¨é€‰æ‹©æœ€ä½³è·¯çº¿ï¼š\n\n";
+		cout << "          æ‚¨çš„èµ·ç‚¹ä¸ºï¼š" << st << endl;
+
+		cout << "          æœ€åŽåˆ°è¾¾ç»ˆç‚¹ï¼š" << en << endl;
+		cout << "          è·¯ç¨‹ä¸ºï¼š" << dis[end] << "å…¬é‡Œ" << endl;
+		cout << '\n' << "ç¥æ‚¨ä¸€è·¯é¡ºé£Ž" << endl;
+		system("pause");
+
+		return;
+	}
+}
+void make_chooce(int ans, string st, string end, vector<int>vt[], int mp_maney[][1000], int mp_time[][1000])
 {
 	switch (ans)
 	{
@@ -128,7 +127,7 @@ void make_chooce(int ans, string st, string end,vector<int>vt[],int mp_maney[][1
 		money_road(st, end, vt, mp_maney);
 		break;
 	default:
-		cout << "¶Ô²»Æð£¬ÄãÊäÈëµÄÑ¡Ïî´íÎó,ÇëÖØÐÂÊäÈë¡£" << endl;
+		cout << "å¯¹ä¸èµ·ï¼Œä½ è¾“å…¥çš„é€‰é¡¹é”™è¯¯,è¯·é‡æ–°è¾“å…¥ã€‚" << endl;
 		choose(st, end, vt, mp_maney, mp_time);
 		break;
 	}
